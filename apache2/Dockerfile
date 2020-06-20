@@ -16,6 +16,13 @@ ENV WEB_PHP_TIMEOUT=${PHP_UPSTREAM_TIMEOUT}
 ENV LOG_STDOUT=/var/log/apache2/access.log
 
 ENV LOG_STDERR=/var/log/apache2/error.log
+RUN apt update
+
+RUN a2enmod proxy \
+&& a2enmod proxy_http \
+&& a2enmod ssl \
+&& a2enmod rewrite \
+&& service apache2 stop
 
 EXPOSE 80 443
 
@@ -30,7 +37,6 @@ ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
 CMD ["/bin/bash", "/opt/startup.sh"]
 
 EXPOSE 80 443
-
 ARG APACHE_FOR_MAC_M1=false
 
 RUN if [ ${APACHE_FOR_MAC_M1} = true ]; then \
